@@ -1,32 +1,58 @@
-import cv2
-
+import cv2 as cv
 import mediapipe as mp
+from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
+import time
 
 
 TF_ENABLE_ONEDNN_OPTS=0
 
+frame_timestamp_ms = int(time.time() * 1000)
+
 BaseOptions = mp.tasks.BaseOptions
-GestureRecognizer = mp.tasks.vision.GestureRecognizer
-GestureRecognizerOptions = mp.tasks.vision.GestureRecognizerOptions
+HandLandmarker = mp.tasks.vision.HandLandmarker
+HandLandmarkerOptions = mp.tasks.vision.HandLandmarkerOptions
 VisionRunningMode = mp.tasks.vision.RunningMode
 
-# Create a gesture recognizer instance with the image mode:
-options = GestureRecognizerOptions(
-    base_options=BaseOptions(model_asset_path='/path/to/model.task'),
-    running_mode=VisionRunningMode.IMAGE)
+options = HandLandmarkerOptions(
+    base_options=BaseOptions(model_asset_path='task/hand_landmarker.task'),
+    running_mode=VisionRunningMode.VIDEO)
+
+
+#create a opencv session
+cap = cv.VideoCapture(0)
+
+#video loop
+while True:
+    
+    #get frame
+    ret, frame = cap.read()
+
+    #frame picture to be normal video
+    frame = cv.flip(frame, 1)
+
+    with HandLandmarker.create_from_options(options) as landmarker:
+        #turn the frame into an mediapipe frame
+        mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
+        
+        #is their a hand
+        hand_landmarker_result = landmarker.detect_for_video(mp_image, frame_timestamp_ms)
+
+        print(hand_landmarker_result)
+
+    #show the frame
+    cv.imshow('frame',frame)
+
+    #if retrieved is false print error
+    if not ret:
+        print("error in retrieving frame")
+        break
+
+    
+    if cv.waitKey(1) == ord('q'):
+        break
 
 
 
-with GestureRecognizer.create_from_options(options) as recognizer:
 
 
-    cap = cv2.VideoCapture(0)
-
-    while True:
-        ret, frame = cap.read()
-        frame = cv2.flip(frame, 1)
-
-        cv2.imshow('frame',frame)
-        if cv2.waitKey(1) == ord('q'):
-            break
