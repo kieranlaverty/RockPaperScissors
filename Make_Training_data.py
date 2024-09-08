@@ -15,7 +15,7 @@ import time
 save = False
 
 #This is prompting for the type of gesture that is being recorded
-gesture = input("What is the gesture")
+gesture = input("What is the gesture\n")
 
 TF_ENABLE_ONEDNN_OPTS=0
 
@@ -69,6 +69,11 @@ def draw_landmarks_on_image(rgb_image, detection_result):
         hand_landmarks_proto.landmark.extend([
           landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z) for landmark in hand_landmarks
         ])
+
+        print(hand_landmarks_proto.landmark[0])
+
+
+
         solutions.drawing_utils.draw_landmarks(
           annotated_image,
           hand_landmarks_proto,
@@ -88,6 +93,8 @@ def draw_landmarks_on_image(rgb_image, detection_result):
         cv.putText(annotated_image, f"{handedness[0].category_name}",
                     (text_x, text_y), cv.FONT_HERSHEY_DUPLEX,
                     FONT_SIZE, HANDEDNESS_TEXT_COLOR, FONT_THICKNESS, cv.LINE_AA)
+        
+    print("End set ___________________________\n")
         
     return annotated_image
 
