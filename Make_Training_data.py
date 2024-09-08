@@ -46,6 +46,12 @@ FONT_SIZE = 1
 FONT_THICKNESS = 1
 HANDEDNESS_TEXT_COLOR = (88, 205, 54)
 
+#make the csv
+def create_csv(data):
+
+    #enumerate over the values of the hand
+    for idx, i in enumerate(data):
+        print(f'{idx} {i.x} {i.y} {i.z}')
 
 #get the media pipe data from a frame and then calls a draw function
 def get_annotation_from(frame):
@@ -88,9 +94,7 @@ def draw_landmarks_on_image(rgb_image, detection_result):
         ])
 
 
-
-        print(hand_landmarks_proto.landmark)
-
+        create_csv(hand_landmarks_proto.landmark)
 
 
         solutions.drawing_utils.draw_landmarks(
