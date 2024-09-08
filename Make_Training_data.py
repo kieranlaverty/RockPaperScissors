@@ -1,4 +1,4 @@
-import os
+import csv
 
 import cv2 as cv
 import numpy as np
@@ -48,10 +48,24 @@ HANDEDNESS_TEXT_COLOR = (88, 205, 54)
 
 #make the csv
 def create_csv(data):
-
+    row = []
     #enumerate over the values of the hand
     for idx, i in enumerate(data):
-        print(f'{idx} {i.x} {i.y} {i.z}')
+        #condence into a list
+        row.append(i.x)
+        row.append(i.y)
+        row.append(i.z)
+    
+    print(gesture)
+    print(row)
+
+    #add csv writer here to import new row into the csv file
+    #file name should be "gesture".csv
+
+
+
+    return
+
 
 #get the media pipe data from a frame and then calls a draw function
 def get_annotation_from(frame):
