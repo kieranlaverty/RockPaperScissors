@@ -1,6 +1,11 @@
 # RockPaperScissors
  a game of rock paper scissors using openCV and mediapipe
 
+# What still needs to get done
+ Create a data set for rock, paper, scissors
+ Train the model
+ add the model to main with game UI
+
 
 
 references:
