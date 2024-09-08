@@ -23,7 +23,8 @@ options = HandLandmarkerOptions(
     base_options=BaseOptions(model_asset_path='task/hand_landmarker.task'),
     running_mode=VisionRunningMode.IMAGE,
     num_hands=2,
-    min_hand_detection_confidence=.3)
+    min_hand_detection_confidence=.3,
+    min_tracking_confidence = .3)
 detector = vision.HandLandmarker.create_from_options(options)
 
 MARGIN = 10
