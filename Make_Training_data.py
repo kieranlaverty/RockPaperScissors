@@ -19,8 +19,12 @@ gesture = input("What is the gesture\n")
 
 TF_ENABLE_ONEDNN_OPTS=0
 
+
+#for the time stamp of a frame
 frame_timestamp_ms = int(time.time() * 1000)
 
+
+#options for mediapipe
 BaseOptions = mp.tasks.BaseOptions
 HandLandmarker = mp.tasks.vision.HandLandmarker
 HandLandmarkerOptions = mp.tasks.vision.HandLandmarkerOptions
@@ -35,27 +39,40 @@ options = HandLandmarkerOptions(
     min_tracking_confidence = .3)
 detector = vision.HandLandmarker.create_from_options(options)
 
+
+#font settings
 MARGIN = 10
 FONT_SIZE = 1
 FONT_THICKNESS = 1
 HANDEDNESS_TEXT_COLOR = (88, 205, 54)
 
 
+#get the media pipe data from a frame and then calls a draw function
 def get_annotation_from(frame):
 
+    #converts image to a type mediapipe can use
     image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
-    detection_result = detector.detect(image)
-    annotated_image = draw_landmarks_on_image(image.numpy_view(), detection_result)
 
-    if save:
-        pass
+    #gets results from model
+    detection_result = detector.detect(image)
+
+    #gets the annated image back
+    annotated_image = draw_landmarks_on_image(image.numpy_view(), detection_result)
     
+    #returns detection results and annotated image
     return detection_result, annotated_image
 
+
+#draw the landmarker on an image
 def draw_landmarks_on_image(rgb_image, detection_result):
 
+    #simplifies the data
     hand_landmarks_list = detection_result.hand_landmarks
+
+    #get list of handedness
     handedness_list = detection_result.handedness
+
+    #creates a copy of the image
     annotated_image = np.copy(rgb_image)
 
     # Loop through the detected hands to visualize.
@@ -70,7 +87,9 @@ def draw_landmarks_on_image(rgb_image, detection_result):
           landmark_pb2.NormalizedLandmark(x=landmark.x, y=landmark.y, z=landmark.z) for landmark in hand_landmarks
         ])
 
-        print(hand_landmarks_proto.landmark[0])
+
+
+        print(hand_landmarks_proto.landmark)
 
 
 
@@ -111,7 +130,9 @@ while True:
     #frame picture to be normal video
     frame = cv.flip(frame, 1)
 
+    #if frame exists
     if ret:
+        #gets new image
         detection_result, annotation = get_annotation_from(frame)
     
         cv.imshow('', annotation)  
